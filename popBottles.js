@@ -8,39 +8,62 @@ function bottlesPurchased(dollars) {
 //you have.
 
 function drinkPop(bottleTray) {
-  bottleTray.emptyBottles = bottleTray.fullBottles,
-  bottleTray.caps = bottleTray.fullBottles,
+  bottleTray.emptyBottles += bottleTray.fullBottles,
+  bottleTray.caps += bottleTray.fullBottles,
+  bottleTray.bottlesConsumed += bottleTray.fullBottles,
   bottleTray.fullBottles = 0
 };
-//returns the maximum number of bottles it can
+//returns the maximum number of bottles possible to the store
 function returnBottles(bottleTray) { 
-  let emptiesToReturn = bottleTray.emptyBottles;
-  bottleTray.emptyBottles = emptiesToReturn % bottleTray.botReedeemRate;
-  emptiesToReturn -= emptiesToReturn % bottleTray.botReedeemRate;
-  bottleTray.fullBottles += emptiesToReturn / bottleTray.botReedeemRate;
+  let empties = bottleTray.emptyBottles;
+  if (emptiesToReturn < bottleTray.botReedeemRate) {
+    return false;
+  }
+  else {
+    
+  return true;
+  }
 };
+// returns maxmium number of caps to the store
 function returnCaps(bottleTray) {
   let capsToReturn = bottleTray.caps;
+  if (capsToReturn < bottleTray.capRedeemRate){
+    return false;
+  } else {
   bottleTray.caps = capsToReturn % bottleTray.capRedeemRate;
   capsToReturn -= capsToReturn % bottleTray.capRedeemRate;
-  
   bottleTray.fullBottles += capsToReturn / bottleTray.capRedeemRate;
+  return true;
+  }
 };
 function goToStore(bottleTray) {
-  returnBottles(bottleTray);
-  returnCaps(bottleTray);
+  let botttleReturnTrue = returnBottles(bottleTray);
+  let returnCapsTrue = returnCaps(bottleTray);
+  if(botttleReturnTrue || returnCapsTrue) {
+    return true;
+  } else {
+    return false;
+  } 
 };
 function findNumOfBottles (input) {
   const initialBottlesPurchased = bottlesPurchased(input);
-  const bottles = {
+  const myPop = {
     fullBottles: initialBottlesPurchased,
     emptyBottles: 0,
     caps: 0,
+    bottlesConsumed: 0,
+    earnedFromBottles: 0,
+    earnedFromCaps: 0,
     botReedeemRate: 2,
     capRedeemRate: 4
   };
-  drinkPop(bottles);
-  console.log(bottles);
+  let flag = true;
+  do {
+    drinkPop(myPop);
+    console.log(myPop);
+    flag = goToStore(myPop);
+    console.log(myPop);
+  } while (flag);
 
   // object to store value of bottles and methods 
   
