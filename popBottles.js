@@ -16,24 +16,33 @@ function drinkPop(bottleTray) {
 //returns the maximum number of bottles possible to the store
 function returnBottles(bottleTray) { 
   let empties = bottleTray.emptyBottles;
-  if (emptiesToReturn < bottleTray.botReedeemRate) {
+  let redeemRate = bottleTray.botReedeemRate;
+  if (empties < redeemRate) {
     return false;
-  }
-  else {
-    
-  return true;
+  } else {
+    let leftOverBottles = empties % redeemRate;
+    let returnToStore = empties - leftOverBottles;
+    let bottlesEarned = returnToStore / redeemRate;
+    bottleTray.emptyBottles = leftOverBottles;
+    bottleTray.fullBottles += bottlesEarned;
+    bottleTray.earnedFromBottles += bottlesEarned;
+    return true;
   }
 };
 // returns maxmium number of caps to the store
 function returnCaps(bottleTray) {
-  let capsToReturn = bottleTray.caps;
-  if (capsToReturn < bottleTray.capRedeemRate){
+  let caps = bottleTray.caps;
+  let redeemRate = bottleTray.capRedeemRate;
+  if (caps < redeemRate){
     return false;
   } else {
-  bottleTray.caps = capsToReturn % bottleTray.capRedeemRate;
-  capsToReturn -= capsToReturn % bottleTray.capRedeemRate;
-  bottleTray.fullBottles += capsToReturn / bottleTray.capRedeemRate;
-  return true;
+    let leftOverCaps = caps % redeemRate;
+    let returnToStore = caps - leftOverCaps;
+    let bottlesEarned = returnToStore / redeemRate;
+    bottleTray.caps = leftOverCaps;
+    bottleTray.fullBottles += bottlesEarned;
+    bottleTray.earnedFromCaps += bottlesEarned;
+    return true;
   }
 };
 function goToStore(bottleTray) {
@@ -45,7 +54,7 @@ function goToStore(bottleTray) {
     return false;
   } 
 };
-function findNumOfBottles (input) {
+function howManyPop(input) {
   const initialBottlesPurchased = bottlesPurchased(input);
   const myPop = {
     fullBottles: initialBottlesPurchased,
@@ -60,14 +69,17 @@ function findNumOfBottles (input) {
   let flag = true;
   do {
     drinkPop(myPop);
-    console.log(myPop);
     flag = goToStore(myPop);
-    console.log(myPop);
   } while (flag);
 
-  // object to store value of bottles and methods 
   
+console.log('Total Bottles: ', myPop.bottlesConsumed);
+console.log('Remaining Bottles:', myPop.emptyBottles);
+console.log('Remaining Caps:', myPop.caps);
+console.log('Total Earned:');
+console.log('Bottles: ', myPop.earnedFromBottles);
+console.log('Caps:', myPop.earnedFromCaps);
 };
 
 myArgs = process.argv.slice(2);
-findNumOfBottles(Number(myArgs));
+howManyPop(Number(myArgs));
